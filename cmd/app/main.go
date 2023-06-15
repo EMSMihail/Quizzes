@@ -1,8 +1,8 @@
 package main
 
 import (
-	//"fmt"
-	//"database/sql"
+	"database/sql"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -74,7 +74,48 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func connectToDB() (*sql.DB, error) {
+	connStr := "postgres://aizek:1234@localhost/quizzes?sslmode=disable"
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
+}
+
 func main() {
+
+	db, err := connectToDB()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Подключение к базе данных успешно!")
+
+	rows, err := db.Query("SELECT * FROM users")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var id int
+		var nickname, email, password_hash string
+		err := rows.Scan(&id, &nickname, &email, &password_hash)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("ID:", id, "| Username:", nickname, "| E-Mail:", email, "| Password_hash:", password_hash)
+	}
+	if err = rows.Err(); err != nil {
+		log.Fatal(err)
+	}
+
 	fs := http.FileServer(http.Dir("../../web/static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
