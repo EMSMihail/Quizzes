@@ -1,60 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
-        <link rel="stylesheet" type="text/css" href="../static/registration.css">
-        <title>Registration Page</title>
-    </head>
-    <body ng-app="mainModule" ng-controller="mainController">
-      <div id="registration-page" class="row">
-          <div class="col s12 z-depth-6 card-panel">
-            <form class="registration-form">
-              <div class="row">
-              </div>
-              <div class="row">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/registration.css">
+    <title>Registration Page</title>
+    <style>
+        .input-field label {
+            position: absolute;
+            top: 0;
+            left: 20px;
+            transition: all 0.3s;
+        }
+        .input-field input[type="text"]:not(.browser-default):focus + label,
+        .input-field input[type="email"]:not(.browser-default):focus + label,
+        .input-field input[type="password"]:not(.browser-default):focus + label {
+            color: #00bcd4;
+        }
+        .input-field input[type="text"]:not(.browser-default):valid + label,
+        .input-field input[type="email"]:not(.browser-default):valid + label,
+        .input-field input[type="password"]:not(.browser-default):valid + label {
+            top: -14px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body ng-app="mainModule" ng-controller="mainController">
+<div id="registration-page" class="row">
+    <div class="col s12 z-depth-6 card-panel">
+        <form class="registration-form" id="registration-form">
+            <div class="row">
+            </div>
+            <div class="row">
                 <div class="input-field col s12">
-                  <i class="material-icons prefix">person</i>
-                  <input class="validate" id="nickname" type="text">
-                  <label for="nickname" data-error="wrong" data-success="right">Nickname</label>
+                    <i class="material-icons prefix">person</i>
+                    <input class="validate" id="nickname" type="text" onblur="checkInputValue(this)">
+                    <label for="nickname" data-error="wrong" data-success="right">Nickname</label>
                 </div>
-              </div>
-              <div class="row">
+            </div>
+            <div class="row">
                 <div class="input-field col s12">
-                  <i class="material-icons prefix">email</i>
-                  <input class="validate" id="email" type="email">
-                  <label for="email" data-error="wrong" data-success="right">Email</label>
+                    <i class="material-icons prefix">email</i>
+                    <input class="validate" id="email" type="email" onblur="checkInputValue(this)">
+                    <label for="email" data-error="wrong" data-success="right">Email</label>
                 </div>
-              </div>
-              <div class="row">
+            </div>
+            <div class="row">
                 <div class="input-field col s12">
-                  <i class="material-icons prefix">lock</i>
-                  <input id="password" type="password">
-                  <label for="password">Password</label>
+                    <i class="material-icons prefix">lock</i>
+                    <input id="password" type="password" onblur="checkInputValue(this)">
+                    <label for="password">Password</label>
                 </div>
-              </div>
-              <div class="row">          
-                <!-- <div class="input-field col s12 m12 l12  registration-text">
-                    <input type="checkbox" id="remember-me" />
-                    <label for="remember-me">Remember me</label>
-                </div> -->
-              </div>
-              <div class="row">
+            </div>
+            <div class="row">
                 <div class="input-field col s12">
-                  <a href="#" class="btn primary-button waves-light col s12">registration</a>
+                    <a href="#" class="btn primary-button waves-light col s12" id="registration-button">registration</a>
                 </div>
-              </div>
-              <div class="row">
+            </div>
+            <div class="row">
                 <div class="input-field col s12">
-                  <a href="#" class="secondary-button btn waves-effect waves-light col s12">login</a>
+                    <a href="#" class="secondary-button btn waves-effect waves-light col s12">login</a>
                 </div>
-                <!-- <div class="input-field col s6 m6 l6">
-                    <p class="margin right-align medium-small"><a href="#">Forgot password?</a></p>
-                </div>           -->
-              </div>
-      
-            </form>
-          </div>
-        </div> </body>      
+            </div>
+
+        </form>
+    </div>
+</div>
+<script>
+    function checkInputValue(input) {
+        if (input.value.trim() !== "") {
+            input.classList.add("valid");
+        } else {
+            input.classList.remove("valid");
+        }
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  $("#registration-button").click(function(event) {
+    event.preventDefault(); // Предотвращает отправку формы по умолчанию
+
+    // Собираем данные из формы
+    var nickname = $("#nickname").val();
+    var email = $("#email").val();
+    var password = $("#password").val();
+
+    // Создаем объект с данными
+    var data = {
+      nickname: nickname,
+      email: email,
+      password: password
+    };
+
+    // Отправляем данные на сервер
+    $.ajax({
+      type: "POST",
+      url: "/registration", // Замените на ваш путь к обработчику регистрации
+      data: data,
+      success: function(response) {
+        // Обработка успешного ответа от сервера
+        window.location.href = "/success"; // Перенаправляем на страницу успешной регистрации
+      },
+      error: function(xhr, status, error) {
+        // Обработка ошибки
+        console.log(error); // Выводим ошибку в консоль
+      }
+    });
+  });
+});
+</script>
+</body>
 </html>
