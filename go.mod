@@ -1,4 +1,4 @@
-module Quizzes
+module github.com/EMSMihail/Quizzes
 
 go 1.20
 
