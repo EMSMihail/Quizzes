@@ -37,6 +37,7 @@ func main() {
 
 	http.HandleFunc("/", handlers.RegistrationPageHandler)
 	http.HandleFunc("/success", handlers.SuccessPageHandler)
+	//http.Handle("")
 
 	log.Fatal(http.ListenAndServe(":5000", nil))
 }

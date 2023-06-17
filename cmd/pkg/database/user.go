@@ -4,6 +4,10 @@ import (
 	"database/sql"
 )
 
+//Declaration of struct User with 4 fields
+//First func shows all user's table entries via SELECT
+//Second func creating new entry in user's table via INSERT
+
 type User struct {
 	ID           int
 	Nickname     string

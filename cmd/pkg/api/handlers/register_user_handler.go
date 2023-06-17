@@ -9,6 +9,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+//Creating new user via /registration page and transfering data which input in data field into database
+//Second fucntion implementing hashing of input password to be stored in database
+
 func RegisterUserHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	nickname := r.FormValue("nickname")
 	email := r.FormValue("email")
