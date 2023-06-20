@@ -35,8 +35,10 @@ func main() {
 	fs := http.FileServer(http.Dir("../../web/static/css"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	http.HandleFunc("/", handlers.RegistrationPageHandler)
+	http.HandleFunc("/login", handlers.LoginPageHandler)
+	http.HandleFunc("/registration", handlers.RegistrationPageHandler)
 	http.HandleFunc("/success", handlers.SuccessPageHandler)
+	http.HandleFunc("/", handlers.QuizPageHandler)
 	//http.Handle("")
 
 	log.Fatal(http.ListenAndServe(":5000", nil))
