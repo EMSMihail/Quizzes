@@ -4,10 +4,20 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"text/template"
 
 	"github.com/EMSMihail/Quizzes/cmd/pkg/database"
 	"golang.org/x/crypto/bcrypt"
 )
+
+type PageData struct {
+	Title    string
+	Message  string
+	IsError  bool
+	Nickname string
+	Email    string
+	Password string
+}
 
 func RegisterUserHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	nickname := r.FormValue("nickname")
@@ -15,19 +25,19 @@ func RegisterUserHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	password := r.FormValue("password")
 
 	if nickname == "" || email == "" || password == "" {
-		http.Error(w, "Not all required fields are filled", http.StatusBadRequest)
+		showRegistrationPage(w, "Not all required fields are filled", true, nickname, email, password)
 		return
 	}
 
 	existingUser, err := database.GetUserByNicknameOrEmail(db, nickname, email)
 	if err != nil {
 		log.Println("Error retrieving user:", err)
-		http.Error(w, "Error retrieving user", http.StatusInternalServerError)
+		showRegistrationPage(w, "Error retrieving user", true, nickname, email, password)
 		return
 	}
 
 	if existingUser != nil {
-		http.Error(w, "User with the same nickname or email already exists", http.StatusBadRequest)
+		showRegistrationPage(w, "User with the same nickname or email already exists", true, nickname, email, password)
 		return
 	}
 
@@ -39,8 +49,8 @@ func RegisterUserHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 	err = database.SaveUserToDB(db, user)
 	if err != nil {
-		http.Error(w, "Failed to save user to the database", http.StatusInternalServerError)
 		log.Println("Error saving user:", err)
+		showRegistrationPage(w, "Failed to save user to the database", true, nickname, email, password)
 		return
 	}
 
@@ -54,4 +64,26 @@ func hashPassword(password string) string {
 	}
 
 	return string(hashedPassword)
+}
+
+func showRegistrationPage(w http.ResponseWriter, message string, isError bool, nickname string, email string, password string) {
+	data := PageData{
+		Title:    "Registration Page",
+		Message:  message,
+		IsError:  isError,
+		Nickname: nickname,
+		Email:    email,
+		Password: password,
+	}
+
+	tmpl, err := template.ParseFiles("../../web/templates/registration.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if err := tmpl.Execute(w, data); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

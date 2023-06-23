@@ -24,6 +24,12 @@
             top: -14px;
             font-size: 12px;
         }
+        .error-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
@@ -63,6 +69,15 @@
                     <a href="/login" class="secondary-button btn waves-effect waves-light col s12">Login</a>
                 </div>
             </div>
+            {{ if .IsError }}
+            <div class="row">
+            <div class="col s12">
+                <div class="card-panel red white-text error-message">
+                {{ .Message }}
+                </div>
+            </div>
+            </div>
+            {{ end }}
         </form>
     </div>
 </div>
