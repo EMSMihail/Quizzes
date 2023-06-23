@@ -8,14 +8,14 @@ import (
 )
 
 func LoginPageHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		db, err := database.ConnectToDB()
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		defer db.Close()
-	}
+	// if r.Method == http.MethodGet {
+	// 	db, err := database.ConnectToDB()
+	// 	if err != nil {
+	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// 	defer db.Close()
+	// }
 
 	data := map[string]interface{}{
 		"Title": "Login Page",

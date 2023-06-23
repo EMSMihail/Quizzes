@@ -9,9 +9,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-//Creating new user via /registration page and transfering data which input in data field into database
-//Second fucntion implementing hashing of input password to be stored in database
-
 func RegisterUserHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	nickname := r.FormValue("nickname")
 	email := r.FormValue("email")
@@ -22,15 +19,28 @@ func RegisterUserHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
+	existingUser, err := database.GetUserByNicknameOrEmail(db, nickname, email)
+	if err != nil {
+		log.Println("Error retrieving user:", err)
+		http.Error(w, "Error retrieving user", http.StatusInternalServerError)
+		return
+	}
+
+	if existingUser != nil {
+		http.Error(w, "User with the same nickname or email already exists", http.StatusBadRequest)
+		return
+	}
+
 	user := database.User{
 		Nickname:     nickname,
 		Email:        email,
 		PasswordHash: hashPassword(password),
 	}
 
-	err := database.SaveUserToDB(db, user)
+	err = database.SaveUserToDB(db, user)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Failed to save user to the database", http.StatusInternalServerError)
+		log.Println("Error saving user:", err)
 		return
 	}
 
@@ -38,7 +48,6 @@ func RegisterUserHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 }
 
 func hashPassword(password string) string {
-	// Генерация соли и хэширование пароля
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Fatal(err)
