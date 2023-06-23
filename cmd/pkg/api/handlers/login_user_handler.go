@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -25,24 +24,18 @@ func LoginUserHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	}
 
 	if hashedPassFromDB == "" {
-		fmt.Fprintf(w, "Error: Invalid email or password")
+		// Пользователь не существует в базе данных
+		http.Redirect(w, r, "/login?error=1", http.StatusFound)
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(hashedPassFromDB), []byte(password))
 	if err != nil {
-		fmt.Fprintf(w, "Error: Invalid email or password")
+		// Неверный email или пароль
+		http.Redirect(w, r, "/login?error=1", http.StatusFound)
 		return
 	}
 
-	fmt.Fprintf(w, "Success: Passwords match")
-
-	// // Здесь вы можете добавить свою логику проверки учетных данных пользователя
-	// if email == "test@test.test" && password == "1234" {
-	// 	// Успешный вход
-	// 	http.Redirect(w, r, "/", http.StatusFound)
-	// } else {
-	// 	// Неверные учетные данные
-	// 	http.Redirect(w, r, "/login?error=1", http.StatusFound)
-	// }
+	// Успешная аутентификация
+	http.Redirect(w, r, "/success", http.StatusFound)
 }
