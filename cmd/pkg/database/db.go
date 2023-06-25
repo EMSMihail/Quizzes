@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/lib/pq"
 )
@@ -9,11 +10,25 @@ import (
 //Function for connecting to postgresql database with user=aizek, pass=1234, db=quizzes
 
 func ConnectToDB() (*sql.DB, error) {
-	connStr := "postgres://aizek:1234@localhost/quizzes?sslmode=disable"
+	host := "localhost"
+	port := 5433 // Порт, привязанный к контейнеру (5433 в данном случае)
+	user := "aizek"
+	password := "1234"
+	dbname := "quizzes"
+
+	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+		host, port, user, password, dbname)
+
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, err
 	}
+
+	err = db.Ping()
+	if err != nil {
+		return nil, err
+	}
+
 	return db, nil
 }
 
