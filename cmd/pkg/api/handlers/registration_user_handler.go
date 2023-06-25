@@ -54,7 +54,7 @@ func RegisterUserHandler(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 	}
 
-	http.Redirect(w, r, "/success", http.StatusFound)
+	http.Redirect(w, r, "/registration_success", http.StatusFound)
 }
 
 func hashPassword(password string) string {

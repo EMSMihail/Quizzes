@@ -33,7 +33,7 @@ func ConnectToDB() (*sql.DB, error) {
 }
 
 func GetUserByNicknameOrEmail(db *sql.DB, nickname string, email string) (*User, error) {
-	query := `SELECT nickname, email, password_hash FROM users WHERE nickname = $1 OR email = $2 LIMIT 1`
+	query := `SELECT nickname, email, password FROM users WHERE nickname = $1 OR email = $2 LIMIT 1`
 
 	row := db.QueryRow(query, nickname, email)
 

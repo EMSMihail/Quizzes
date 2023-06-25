@@ -6,7 +6,7 @@ import (
 
 func GetHashPassFromDB(db *sql.DB, email string) (string, error) {
 	var hashPass string
-	err := db.QueryRow("SELECT password_hash FROM users WHERE email = $1", email).Scan(&hashPass)
+	err := db.QueryRow("SELECT password FROM users WHERE email = $1", email).Scan(&hashPass)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			// Пользователь с указанным email не найден

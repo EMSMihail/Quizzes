@@ -38,6 +38,7 @@ func main() {
 	http.HandleFunc("/login", handlers.LoginPageHandler)
 	http.HandleFunc("/registration", handlers.RegistrationPageHandler)
 	http.HandleFunc("/success", handlers.SuccessPageHandler)
+	http.HandleFunc("/registration_success", handlers.RegistrationSuccessPageHandler)
 	http.HandleFunc("/", handlers.QuizPageHandler)
 	//http.Handle("")
 

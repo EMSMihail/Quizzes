@@ -41,7 +41,7 @@ func GetUsersFromDB(db *sql.DB) ([]User, error) {
 }
 
 func SaveUserToDB(db *sql.DB, user User) error {
-	query := `INSERT INTO users (nickname, email, password_hash) VALUES ($1, $2, $3)`
+	query := `INSERT INTO users (nickname, email, password) VALUES ($1, $2, $3)`
 	_, err := db.Exec(query, user.Nickname, user.Email, user.PasswordHash)
 	if err != nil {
 		return err
