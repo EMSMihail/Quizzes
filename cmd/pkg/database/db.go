@@ -4,15 +4,19 @@ import (
 	"database/sql"
 	"fmt"
 
+	//"os"
+
 	_ "github.com/lib/pq"
 )
 
 //Function for connecting to postgresql database with user=aizek, pass=1234, db=quizzes
 
 func ConnectToDB() (*sql.DB, error) {
-	//host := "localhost"
-	// host := "host.docker.internal"
-	host := "quizzes_db"
+	// host := "localhost"
+	//hostIP := os.Getenv("HOST_IP")
+	//host := hostIP
+	host := "172.17.0.1"
+	// host := "quizzes_db"
 	//port := 5433 // Порт, привязанный к контейнеру (5433 в данном случае)
 	port := 5432
 	user := "aizek"

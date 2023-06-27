@@ -7,12 +7,7 @@ RUN go mod download && go mod verify
 
 COPY . .
 
-# RUN go mod init Quizzes
-# RUN go mod tidy
-
-# RUN echo "nameserver 8.8.8.8" >> /etc/resolv.conf
-ENV DATABASE_URL=postgres://aizek:1234@quizzes_db/quizzes?sslmode=disable
-
+# ENV DATABASE_URL=postgres://aizek:1234@quizzes_db/quizzes?sslmode=disable
 
 ENV STATIC_DIR=/app/web/static
 
