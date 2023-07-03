@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/EMSMihail/Quizzes/cmd/pkg/api/handlers"
 	"github.com/EMSMihail/Quizzes/cmd/pkg/database"
@@ -32,8 +34,16 @@ func main() {
 		log.Println("ID:", user.ID, "| Username:", user.Nickname, "| E-Mail:", user.Email, "| Password_hash:", user.PasswordHash)
 	}
 
-	fs := http.FileServer(http.Dir("../../web/static/css"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	// fs := http.FileServer(http.Dir("../../web/static/css"))
+	// http.Handle("/static/", http.StripPrefix("/static/", fs))
+	staticDir := os.Getenv("STATIC_DIR")
+	if staticDir == "" {
+		log.Fatal("STATIC_DIR environment variable is not set")
+	}
+
+	staticCSSDir := filepath.Join(staticDir, "css")
+	staticFileServer := http.FileServer(http.Dir(staticCSSDir))
+	http.Handle("/static/css/", http.StripPrefix("/static/css/", staticFileServer))
 
 	http.HandleFunc("/login", handlers.LoginPageHandler)
 	http.HandleFunc("/registration", handlers.RegistrationPageHandler)

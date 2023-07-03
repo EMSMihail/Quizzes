@@ -1,8 +1,10 @@
 FROM golang:1.20
 
-WORKDIR /
+RUN mkdir /app
+WORKDIR /app
 
-COPY go.mod go.sum ./
+COPY go.mod go.sum /app/
+RUN cd /app/
 RUN go mod download && go mod verify
 
 COPY . .
@@ -15,8 +17,8 @@ ENV TEMPLATES_DIR=/app/web/templates
 
 ENV PORT=5000
 
-RUN go build -v -o /app/main /cmd/app/main.go
+RUN go build -v -o /app/cmd/app/main /app/cmd/app/main.go
 
 EXPOSE 5000
 
-CMD ["/app/main"]
+CMD ["/app/cmd/app/main"]
