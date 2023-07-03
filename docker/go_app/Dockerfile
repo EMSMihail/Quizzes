@@ -4,7 +4,6 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY go.mod go.sum /app/
-RUN cd /app/
 RUN go mod download && go mod verify
 
 COPY . .
