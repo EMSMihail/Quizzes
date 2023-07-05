@@ -18,7 +18,7 @@ func LoginPageHandler(w http.ResponseWriter, r *http.Request) {
 		data["Error"] = "Invalid username or password"
 	}
 
-	tmpl, err := template.ParseFiles("../../web/templates/login.html")
+	tmpl, err := template.ParseFiles("./web/templates/login.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

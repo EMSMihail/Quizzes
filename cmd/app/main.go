@@ -32,7 +32,7 @@ func main() {
 		log.Println("ID:", user.ID, "| Username:", user.Nickname, "| E-Mail:", user.Email, "| Password_hash:", user.PasswordHash)
 	}
 
-	fs := http.FileServer(http.Dir("../../web/static/css"))
+	fs := http.FileServer(http.Dir("web/static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	http.HandleFunc("/login", handlers.LoginPageHandler)

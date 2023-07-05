@@ -10,12 +10,16 @@ import (
 //Function for connecting to postgresql database with user=aizek, pass=1234, db=quizzes
 
 func ConnectToDB() (*sql.DB, error) {
-	host := "localhost"
-	port := 5433 // Порт, привязанный к контейнеру (5433 в данном случае)
+	// host := "localhost"
+	// port := 5432 // Порт, привязанный к контейнеру (5433 в данном случае)
+	// user := "aizek"
+	// password := "1234"
+	// dbname := "quizzes"
+	host := "172.17.0.1"
+	port := 5433
 	user := "aizek"
 	password := "1234"
 	dbname := "quizzes"
-
 	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
 
